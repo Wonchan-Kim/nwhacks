@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
 const PdfDetails = require("./PdfDetails");
+const fs = require("fs");
+const path = require("path");
 
 // MongoDB connection URL
 const mongoURL =
@@ -10,11 +12,18 @@ const mongoURL =
 
 // Initialize Express app
 const app = express();
+const uploadDir = path.join(__dirname, "../uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+else {
+  console.log("Folder exists");
+}
 
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use("/uploads", express.static("uploads")); // Serve uploaded files statically
+app.use("/uploads", express.static(uploadDir));
 
 // Connect to MongoDB
 mongoose.connect(mongoURL)
